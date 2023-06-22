@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isClimbing;
     private bool isLadder;
 
-    private Rigidbody2D playerRb;
+    public Rigidbody2D playerRb;
     private BoxCollider2D playerCollider;
 
     private void Awake()
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
         verticle = Input.GetAxis("Vertical");
 
-        if(isLadder && (verticle > 0f || verticle < 0f))
+        if(isLadder && (verticle > 0f || verticle < 0f) && isGrounded())
         {
             isClimbing = true;
         }

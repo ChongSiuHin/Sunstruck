@@ -206,4 +206,12 @@ public class EnermyProt : MonoBehaviour
         Gizmos.DrawWireSphere(pointB.transform.position, 0.5f);
         Gizmos.DrawLine(pointA.transform.position, pointB.transform.position);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Enemy")
+        {
+            Physics2D.IgnoreCollision(collision.otherCollider, collision.collider);
+        }
+    }
 }
