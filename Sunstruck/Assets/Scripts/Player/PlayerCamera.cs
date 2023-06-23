@@ -9,82 +9,98 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private float offsetY;
     [SerializeField] private float offsetSpeed;
     [SerializeField] private float offsetManual;
+
+    [SerializeField] private float leftBorder;
+    [SerializeField] private float rightBorder;
+    [SerializeField] private float topBorder;
+    [SerializeField] private float bottomBorder;
+
     private Vector3 camPos;
     private PlayerMovement playerMovement;
+    private bool offsetting;
     
     // Start is called before the first frame update
     void Start()
     {
         camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
         playerMovement = FindObjectOfType<PlayerMovement>();
+        offsetting = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerMovement.playerRb.velocity.x > 0f)
-        {
-            camPos = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z);
-        }
-        else if (playerMovement.playerRb.velocity.x < 0f)
-        {
-            camPos = new Vector3(player.transform.position.x - offsetX, player.transform.position.y + offsetY, transform.position.z);
-        }
-        else
-        {
-            //camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
+        //if (playerMovement.playerRb.velocity.x > 0f)
+        //{
+        //    camPos = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z);
+        //}
+        //else if (playerMovement.playerRb.velocity.x < 0f)
+        //{
+        //    camPos = new Vector3(player.transform.position.x - offsetX, player.transform.position.y + offsetY, transform.position.z);
+        //}
+        //else
+        //{
+            if(!offsetting)
+                camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
 
             //Offset to Right
             if(Input.GetKeyDown(KeyCode.RightArrow))
             {
                 camPos = new Vector3(player.transform.position.x + offsetManual, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = true;
             }
             else if(Input.GetKeyUp(KeyCode.RightArrow))
             {
                 camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = false;
             }
 
             //Offset to Left
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 camPos = new Vector3(player.transform.position.x - offsetManual, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = true;
             }
             else if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = false;
             }
 
             //Offset to Up
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                camPos = new Vector3(player.transform.position.x, player.transform.position.y + (offsetManual / 2), transform.position.z);
+                camPos = new Vector3(player.transform.position.x, player.transform.position.y + (offsetManual / 2f), transform.position.z);
+                offsetting = true;
             }
             else if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = false;
             }
 
             //Offset to Down
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                camPos = new Vector3(player.transform.position.x, player.transform.position.y - (offsetManual / 2), transform.position.z);
+                camPos = new Vector3(player.transform.position.x, player.transform.position.y - (offsetManual / 2f), transform.position.z);
+                offsetting = true;
             }
             else if (Input.GetKeyUp(KeyCode.DownArrow))
             {
                 camPos = new Vector3(player.transform.position.x, player.transform.position.y + offsetY, transform.position.z);
+                offsetting = false;
             }
-        }
+        //}
 
         transform.position = Vector3.Lerp(transform.position, camPos, offsetSpeed * Time.deltaTime);
+
+        if(transform.position.x < leftBorder || transform.position.x > rightBorder)
+        {
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, leftBorder, rightBorder), player.transform.position.y + offsetY, transform.position.z);
+        }
+        else if(transform.position.y < bottomBorder || transform.position.y > topBorder)
+        {
+            transform.position = new Vector3(player.transform.position.x, Mathf.Clamp(transform.position.y, topBorder, bottomBorder), transform.position.z);
+        }
     }
 }
-
-
-//if(input.getkeydown(keycode.rightarrow))
-//    campos = new vector3(player.transform.position.x + offset, player.transform.position.y, campos.z);
-//else if(input.getkeydown(keycode.leftarrow))
-//    campos = new vector3(player.transform.position.x - offset, player.transform.position.y, campos.z);
-//else if (input.getkeydown(keycode.uparrow))
-//    campos = new vector3(player.transform.position.x, player.transform.position.y + offset, campos.z);
-//else if (input.getkeydown(keycode.downarrow))
-//    campos = new vector3(player.transform.position.x, player.transform.position.y - offset, campos.z);

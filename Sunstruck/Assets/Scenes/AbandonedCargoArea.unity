@@ -386,6 +386,10 @@ MonoBehaviour:
   offsetY: 1
   offsetSpeed: 1
   offsetManual: 4.5
+  leftBorder: -5
+  rightBorder: 50
+  topBorder: 1
+  bottomBorder: -5
 --- !u!1001 &288996478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1607,7 +1611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ee9d6e327ad6243b605964e6dbc201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 0.5
+  distance: 0.3
   movableObj:
     serializedVersion: 2
     m_Bits: 64
