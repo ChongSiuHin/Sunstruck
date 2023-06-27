@@ -8,7 +8,7 @@ public class EnermyProt : MonoBehaviour
     public GameObject pointB;
     public GameObject SeekerDetect;
     private Rigidbody2D rb;
-    private Animation anim;
+    public Animator anima;
     private Transform currentPoint;
     public Transform castPoint;
     public float speed;
@@ -24,39 +24,56 @@ public class EnermyProt : MonoBehaviour
     public bool isPlayerSeek;
     public bool isFacingLeft = false;
     private Vector3 Distance = new Vector3(3,0,0);
+    
     // Start is called before the first frame update
     void Start()
     {
+        
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animation>();
+        anima = GetComponent<Animator>();
         currentPoint = pointB.transform;
         currentState = "walk";
-        //anim.SetBool("isRunning", true);
+        anima.SetBool("Run", true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(CanSeekPlayer(agroRange))
+        //var s = anima.GetBool("Run");
+        //Debug.Log(s);
+        if (player.GetComponent<StunGun>().hit == true)
         {
-            chasing();
+            anima.SetBool("Run", false);
+            if (player.GetComponent<StunGun>().stunEnemy)
+            {
+                rb.velocity = new Vector2(0, 0);
+                //Animation
+            }
         }
         else
         {
-            walkAround();
+            if (CanSeekPlayer(agroRange))
+            {
+                chasing();
+            }
+            else
+            {
+                walkAround();
+            }
+            if (isFacingLeft)
+            {
+                endPos = Enemy.position + (Vector3.right * agroRange);
+                //Debug.Log("turn right");
+                //Debug.Log(endPos);
+            }
+            else
+            {
+                endPos = Enemy.position + (Vector3.left * agroRange);
+                //Debug.Log("turn left");
+                //Debug.Log(endPos);
+            }
         }
-        if (isFacingLeft)
-        {
-            endPos = Enemy.position + (Vector3.right * agroRange);
-            //Debug.Log("turn right");
-            //Debug.Log(endPos);
-        }
-        else
-        {
-            endPos = Enemy.position + (Vector3.left * agroRange);
-            //Debug.Log("turn left");
-            //Debug.Log(endPos);
-        }
+        
     }
 
     /*public void chase()
