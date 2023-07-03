@@ -89,7 +89,7 @@ public class InteractionSystem : MonoBehaviour
 
         if (obj.tag == "NextScene")
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneController.instance.NextLevel();
             GetComponent<CheckpointRespawn>().respawnPoint = transform.position;
         }
     }

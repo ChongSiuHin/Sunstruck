@@ -44,10 +44,10 @@ public class CheckpointRespawn : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.F))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                SceneController.instance.NextLevel();
                 respawnPoint = transform.position;
             }
-        } 
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -56,5 +56,7 @@ public class CheckpointRespawn : MonoBehaviour
         {
             isCheckPoint = false;
         }      
-    } 
+    }
+
+    
 }
