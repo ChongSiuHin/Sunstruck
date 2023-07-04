@@ -46,11 +46,11 @@ public class PlayerMovement : MonoBehaviour
 
         verticle = Input.GetAxis("Vertical");
 
-        if(isLadder && (verticle > 0f || verticle < 0f) && isGrounded())
+        if(isLadder && (verticle > 0f || verticle < 0f))
         {
             isClimbing = true;
         }
-        else if (isLadder && isGrounded())
+        else if (isLadder)
         {
             isClimbing = true;
         }
@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         if (isClimbing)
         {
             playerRb.gravityScale = 0f;
-            playerRb.velocity = new Vector2(playerRb.velocity.x, verticle * climbSpeed);
+            playerRb.velocity = new Vector2(0, verticle * climbSpeed);
         }
         else
             playerRb.gravityScale = 3f;

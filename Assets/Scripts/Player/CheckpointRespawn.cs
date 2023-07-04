@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CheckpointRespawn : MonoBehaviour
 {
@@ -40,7 +39,7 @@ public class CheckpointRespawn : MonoBehaviour
             isCheckPoint = true;
         }
         
-        if(collision.CompareTag("NextScene") && GetComponent<InteractionSystem>().pickUpStunGun)
+        if(collision.CompareTag("NextScene"))// && GetComponent<InteractionSystem>().pickUpStunGun)
         {
             if(Input.GetKeyDown(KeyCode.J))
             {

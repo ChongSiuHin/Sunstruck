@@ -7,63 +7,70 @@ public class DialogueManager : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
+    public float textSpeed;
 
     public Animator anim;
-    
-    private Queue<string> sentences;
+    public Dialogue dialogue;
+
+    private int index;
 
     // Start is called before the first frame update
     void Start()
     {
-        sentences = new Queue<string>();
+        dialogueText.text = string.Empty;
+
     }
 
-    // Update is called once per frame
+    // Update is called once per frameZ
     void Update()
     {
         //Triggering next sentence
         if(Input.anyKeyDown)
         {
-            DisplayNextSentence();
+            if(dialogueText.text == dialogue.sentences[index])
+            {
+                DisplayNextSentence();
+            }
+            else
+            {
+                StopAllCoroutines();
+                dialogueText.text = dialogue.sentences[index];
+            }
+            
         }
     }
 
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue()
     {
         anim.SetBool("IsOpen", true);
+        index = 0;
 
         nameText.text = dialogue.name;
 
-        sentences.Clear();
-
-        foreach(string sentence in dialogue.sentences)
-        {
-            sentences.Enqueue(sentence);
-        }
-
-        DisplayNextSentence();
+        StartCoroutine(TypeSentence());
     }
 
     public void DisplayNextSentence()
     {
-        if(sentences.Count == 0)
+        if(index < dialogue.sentences.Length - 1)
+        {
+            index++;
+            dialogueText.text = string.Empty;
+            StartCoroutine(TypeSentence());
+        }
+        else
         {
             EndDialogue();
-            return;
         }
-
-        string sentence = sentences.Dequeue();
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
     }
 
-    IEnumerator TypeSentence(string sentence)
+    IEnumerator TypeSentence()
     {
         dialogueText.text = "";
-        foreach(char letter in sentence.ToCharArray())
+        foreach(char letter in dialogue.sentences[index].ToCharArray())
         {
             dialogueText.text += letter;
-            yield return null;
+            yield return new WaitForSeconds(textSpeed);
         }
     }
 

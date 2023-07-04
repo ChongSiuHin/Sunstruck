@@ -47,7 +47,7 @@ public class InteractionSystem : MonoBehaviour
                 box.GetComponent<StaticBox>().beingMove = true;
                 this.GetComponent<PlayerMovement>().speed /= 2f;
             }
-            else if (Input.GetKeyUp(KeyCode.F))
+            else if (Input.GetKeyUp(KeyCode.J))
             {
                 box.GetComponent<FixedJoint2D>().enabled = false;
                 box.GetComponent<StaticBox>().beingMove = false;
