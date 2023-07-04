@@ -21,7 +21,7 @@ public class CheckpointRespawn : MonoBehaviour
     void Update()
     {
         deadSpace.transform.position = new Vector2(transform.position.x, deadSpace.transform.position.y);
-        if(isCheckPoint && Input.GetKeyDown(KeyCode.F))
+        if(isCheckPoint && Input.GetKeyDown(KeyCode.J))
         {
             respawnPoint = transform.position;
             checkpoint.GetComponent<Animator>().SetTrigger("Activate");
@@ -42,7 +42,7 @@ public class CheckpointRespawn : MonoBehaviour
         
         if(collision.CompareTag("NextScene") && GetComponent<InteractionSystem>().pickUpStunGun)
         {
-            if(Input.GetKeyDown(KeyCode.F))
+            if(Input.GetKeyDown(KeyCode.J))
             {
                 SceneController.instance.NextLevel();
                 respawnPoint = transform.position;

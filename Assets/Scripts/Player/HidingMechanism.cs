@@ -10,7 +10,7 @@ public class HidingMechanism : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hideAllow && Input.GetKeyDown(KeyCode.F))
+        if (hideAllow && Input.GetKeyDown(KeyCode.J))
         {
             isHiding = true;
             this.GetComponent<BoxCollider2D>().isTrigger = true;

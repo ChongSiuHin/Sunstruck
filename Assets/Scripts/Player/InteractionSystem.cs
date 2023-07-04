@@ -38,7 +38,7 @@ public class InteractionSystem : MonoBehaviour
         
         if(hitbox.collider != null)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.J))
             {
                 box = hitbox.collider.gameObject;
 
@@ -56,7 +56,7 @@ public class InteractionSystem : MonoBehaviour
         }
         
 
-        if (hititem.collider != null && Input.GetKeyDown(KeyCode.F))
+        if (hititem.collider != null && Input.GetKeyDown(KeyCode.J))
         {
             pickUp(hititem.collider.gameObject);
         }
