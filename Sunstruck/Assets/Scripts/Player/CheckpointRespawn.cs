@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CheckpointRespawn : MonoBehaviour
 {
@@ -38,13 +37,7 @@ public class CheckpointRespawn : MonoBehaviour
         if(collision.CompareTag("Checkpoint"))
         {
             isCheckPoint = true;
-        }
-        
-        if(collision.CompareTag("NextScene") && GetComponent<InteractionSystem>().pickUpStunGun)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            respawnPoint = transform.position;
-        } 
+        }       
     }
 
     private void OnTriggerExit2D(Collider2D collision)

@@ -92,24 +92,15 @@ public class PlayerCamera : MonoBehaviour
             }
         //}
 
-        if (transform.position.x < leftBorder || transform.position.x > rightBorder)
+        transform.position = Vector3.Lerp(transform.position, camPos, offsetSpeed * Time.deltaTime);
+
+        if(transform.position.x < leftBorder || transform.position.x > rightBorder)
         {
             transform.position = new Vector3(Mathf.Clamp(transform.position.x, leftBorder, rightBorder), player.transform.position.y + offsetY, transform.position.z);
         }
-        else if (transform.position.y < bottomBorder || transform.position.y > topBorder)
+        else if(transform.position.y < bottomBorder || transform.position.y > topBorder)
         {
             transform.position = new Vector3(player.transform.position.x, Mathf.Clamp(transform.position.y, topBorder, bottomBorder), transform.position.z);
         }
-
-        transform.position = Vector3.Lerp(transform.position, camPos, offsetSpeed * Time.deltaTime);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector2(leftBorder, topBorder), new Vector2(rightBorder, topBorder));
-        Gizmos.DrawLine(new Vector2(rightBorder, topBorder), new Vector2(rightBorder, bottomBorder));
-        Gizmos.DrawLine(new Vector2(rightBorder, bottomBorder), new Vector2(leftBorder, bottomBorder));
-        Gizmos.DrawLine(new Vector2(leftBorder, bottomBorder), new Vector2(leftBorder, topBorder));
     }
 }
