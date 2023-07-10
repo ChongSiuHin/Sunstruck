@@ -9,6 +9,9 @@ TagManager:
   - Hidepoint
   - Climable
   - Enemy
+  - NextScene
+  - StunGun
+  - Hidepoint2
   layers:
   - Default
   - TransparentFX
@@ -57,4 +60,7 @@ TagManager:
     locked: 0
   - name: Sprites
     uniqueID: 2231016027
+    locked: 0
+  - name: UI
+    uniqueID: 2377352201
     locked: 0

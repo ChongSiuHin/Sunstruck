@@ -6,100 +6,78 @@ public class EnermyProt : MonoBehaviour
 {
     public GameObject pointA;
     public GameObject pointB;
-    public GameObject SeekerDetect;
     private Rigidbody2D rb;
-    private Animation anim;
+    public Animator anima;
     private Transform currentPoint;
     public Transform castPoint;
     public float speed;
     public GameObject player;
     private Vector2 endPos;
-    private Vector2 startPos;
     public Transform Enemy;
 
     public Transform playerTransform;
     public string currentState;
     public float agroRange;
-    //public float chaseDistance;
     public bool isPlayerSeek;
     public bool isFacingLeft = false;
-    private Vector3 Distance = new Vector3(3,0,0);
+    public float backStepDistance = 1f;
+    private bool isCollidingWithPlayer = false;
+
+    public bool hitPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
+        
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animation>();
+        anima = GetComponent<Animator>();
         currentPoint = pointB.transform;
         currentState = "walk";
-        //anim.SetBool("isRunning", true);
+        anima.SetBool("Run", true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(CanSeekPlayer(agroRange))
-        {
-            chasing();
-        }
-        else
-        {
-            walkAround();
-        }
         if (isFacingLeft)
         {
             endPos = Enemy.position + (Vector3.right * agroRange);
-            //Debug.Log("turn right");
-            //Debug.Log(endPos);
+            Debug.Log("is left");
         }
         else
         {
             endPos = Enemy.position + (Vector3.left * agroRange);
-            //Debug.Log("turn left");
-            //Debug.Log(endPos);
         }
-    }
 
-    /*public void chase()
-    {
-        if (isChasing)
+        if (player.GetComponent<StunGun>().hit && hitPlayer)
         {
-            
-
-            if (Vector2.Distance(transform.position, playerTransform.position) > chaseDistance)
+            anima.SetBool("Run", false);
+            if (player.GetComponent<StunGun>().stunEnemy)
             {
-                isChasing = false;
-            }
-            else if (Vector2.Distance(transform.position, playerTransform.position) > 0.5f & currentPoint == pointB.transform)
-            {
-                isChasing = false;
-            }
-            else if (Vector2.Distance(transform.position, playerTransform.position) < 0.5f & currentPoint == pointA.transform)
-            {
-                isChasing = false;
+                rb.velocity = new Vector2(0, 0);
+                //Animation
             }
         }
-
-
         else
         {
-            if (Vector2.Distance(transform.position, playerTransform.position) < chaseDistance)
+            anima.SetBool("Run", true);
+            if (CanSeekPlayer(agroRange))
             {
-                isChasing = true;
+                chasing();
             }
-            
+            else
+            {
+                walkAround();
+            }
         }
-    }*/
+        
+    }
+
 
     bool CanSeekPlayer(float distance)
     {
         bool val = false;
         float castDisk = distance;
-
-        //if(isFacingLeft)
-        //{
-            //castDisk = -distance;
-        //}
-        //endPos = Enemy.position + Vector3.left * castDisk;
 
         RaycastHit2D hit = Physics2D.Linecast(castPoint.position, endPos, 1 << LayerMask.NameToLayer("Action"));
 
@@ -113,11 +91,11 @@ public class EnermyProt : MonoBehaviour
             {
                 val = false;
             }
-            //Debug.DrawLine(castPoint.position, hit.point, Color.yellow);
+            Debug.DrawLine(castPoint.position, hit.point, Color.yellow);
         }
         else
         {
-            //Debug.DrawLine(castPoint.position, endPos,Color.blue);
+            Debug.DrawLine(castPoint.position, endPos, Color.blue);
         }
         return val;
 
@@ -125,12 +103,6 @@ public class EnermyProt : MonoBehaviour
 
     public void chasing()
     {
-        /*if(!isPlayerSeek)
-        {
-            currentState = "walk";
-        }
-        else
-        {*/
             if (transform.position.x > playerTransform.position.x)
             {
                 transform.position += Vector3.left * speed * Time.deltaTime;
@@ -144,52 +116,34 @@ public class EnermyProt : MonoBehaviour
 
     public void walkAround()
     {
-        /*if (isPlayerSeek)
-        {
-            currentState = "chase";
-        }
-        else
-        {*/
+  
             Vector2 point = currentPoint.position - transform.position;
             if (currentPoint == pointB.transform)
             {
                 rb.velocity = new Vector2(speed, 0);
+                isFacingLeft = false;
             }
             else
             {
                 rb.velocity = new Vector2(-speed, 0);
+                isFacingLeft = true;
             }
 
             if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f & currentPoint == pointB.transform)
             {
-                isFacingLeft = false;
+                //isFacingLeft = false;
                 flip();
                 currentPoint = pointA.transform;
             }
             else if(Vector2.Distance(transform.position, currentPoint.position) < 0.5f & currentPoint == pointA.transform)
             {
-                isFacingLeft = true;
+                //isFacingLeft = true;
                 flip();
                 currentPoint = pointB.transform;
             }
         //}
     }
 
-    /*private void OnCollisionEnter2D(Collision2D other)
-    {
-        if(other.gameObject == player)
-        {
-            isPlayerSeek = true;
-        }    
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject == player)
-        {
-            isPlayerSeek = false;
-        }
-    }*/
     private void flip()
     {
         Vector3 localScale = transform.localScale;
@@ -209,9 +163,27 @@ public class EnermyProt : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Enemy")
+
+        if (collision.gameObject.tag == "Enemy")
         {
             Physics2D.IgnoreCollision(collision.otherCollider, collision.collider);
         }
+
+        if (collision.gameObject.tag == "Player")
+        {
+            hitPlayer = true;
+        }
+        else
+        {
+            hitPlayer = false;
+        }
     }
+
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        isCollidingWithPlayer = false;
+    //    }
+    //}
 }

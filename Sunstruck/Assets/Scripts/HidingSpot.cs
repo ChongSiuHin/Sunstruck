@@ -7,28 +7,36 @@ public class HidingSpot : MonoBehaviour
     [SerializeField] private Sprite nSprite;
     private Sprite oriSprite;
     private HidingMechanism checkHide;
-    private bool playerCheck;
+    private bool playerCheck = false;
+    public Animator anima;
 
     private void Start()
     {
-        oriSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
+        //oriSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
     }
 
     // Update is called once per frame
     void Update()
     {
         checkHide = FindObjectOfType<HidingMechanism>();
-        
-        if(playerCheck)
+
+        if (playerCheck)
         {
-            if (checkHide.isHiding)
+            if (HidingMechanism.isHide)
             {
-                print("Player hiding");
-                gameObject.GetComponent<SpriteRenderer>().sprite = nSprite;
+                anima.SetBool("IsHiding", true);
+                Debug.Log("Player hiding");
+                //gameObject.GetComponent<SpriteRenderer>().sprite = nSprite;
             }
             else
-                gameObject.GetComponent<SpriteRenderer>().sprite = oriSprite;
+            {
+                anima.SetBool("IsHiding", false);
+                Debug.Log("Player show");
+                //gameObject.GetComponent<SpriteRenderer>().sprite = oriSprite;
+            }
+            //Debug.Log(HidingMechanism.isHide);
         }
+        Debug.Log(playerCheck);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,7 +51,7 @@ public class HidingSpot : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            playerCheck = false;
+            //playerCheck = false;
         }
     }
 }

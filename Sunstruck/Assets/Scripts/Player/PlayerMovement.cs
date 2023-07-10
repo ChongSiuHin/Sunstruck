@@ -13,47 +13,31 @@ public class PlayerMovement : MonoBehaviour
     private float verticle;
     private bool isClimbing;
     private bool isLadder;
+    private bool isRunning = false;
+    AudioClip runSound;
 
     public Rigidbody2D playerRb;
     private BoxCollider2D playerCollider;
     public Animator anima;
+    private HidingMechanism hide;
 
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<BoxCollider2D>();
+        hide = GetComponent<HidingMechanism>();
     }
     private void Update()
     {
         horizontal = Input.GetAxis("Horizontal");
-        playerRb.velocity = new Vector2(horizontal * speed, playerRb.velocity.y);
-
-        anima.SetFloat("speed", Mathf.Abs(horizontal));
-
-        if (horizontal > 0f)
+        if(hide.isHiding)
         {
-            transform.localScale = new Vector2(1, 1);
-        }
-        else if (horizontal < 0f)
-        {
-            transform.localScale = new Vector2(-1, 1);
-        }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
-        {
-            playerRb.velocity = new Vector2(playerRb.velocity.x, jumpForce);
         }
-
-        verticle = Input.GetAxis("Vertical");
-
-        if(isLadder && (verticle > 0f || verticle < 0f) && isGrounded())
+        else
         {
-            isClimbing = true;
-        }
-        else if (isLadder && isGrounded())
-        {
-            isClimbing = true;
-        }
+            walk();
+        }   
     }
 
     private void FixedUpdate()
@@ -86,5 +70,56 @@ public class PlayerMovement : MonoBehaviour
             isLadder = false;
             isClimbing = false;
         }   
+    }
+
+    private void walk()
+    {
+        playerRb.velocity = new Vector2(horizontal * speed, playerRb.velocity.y);
+
+        anima.SetFloat("speed", Mathf.Abs(horizontal));
+
+        if (horizontal != 0f)
+        {
+            if (!isRunning)
+            {
+                isRunning = true;
+                AudioManager.Instance.PlayRunSound();
+            }
+
+            if (horizontal > 0f)
+            {
+                transform.localScale = new Vector2(1, 1);
+            }
+            else
+            {
+                transform.localScale = new Vector2(-1, 1);
+            }
+            //AudioManager.Instance.StopCurrentSound();
+        }
+        else
+        {
+            if (isRunning)
+            {
+                isRunning = false;
+                AudioManager.Instance.StopCurrentSound();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
+        {
+            AudioManager.Instance.PlayJumpSound();
+            playerRb.velocity = new Vector2(playerRb.velocity.x, jumpForce);
+        }
+
+        verticle = Input.GetAxis("Vertical");
+
+        if (isLadder && (verticle > 0f || verticle < 0f) && isGrounded())
+        {
+            isClimbing = true;
+        }
+        else if (isLadder && isGrounded())
+        {
+            isClimbing = true;
+        }
     }
 }
